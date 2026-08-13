@@ -20,6 +20,13 @@
 
   <loadAfter>
     <li>brrainz.harmony</li>
+    <!-- SOFT compat (detected by reflection, never referenced at compile time). We load AFTER these so
+         their Harmony patches are in place before we wrap them. Pick Up And Haul: no interception needed
+         (it's a hauling WorkGiver, so it just lets haulers bulk-move products dropped by "Drop at bench").
+         Common Sense: in "Drop at bench" mode we suppress its opportunistic "haul products over bills" so
+         the crafter isn't sent hauling; every other bench is left to Common Sense unchanged. -->
+    <li>Mehni.PickUpAndHaul</li>
+    <li>avilmask.CommonSense</li>
   </loadAfter>
 
   <description>Configure crafting ingredient sources AND product output per work table — once, for the whole bench — instead of per bill.

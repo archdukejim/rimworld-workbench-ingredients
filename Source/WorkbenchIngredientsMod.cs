@@ -17,7 +17,13 @@ namespace WorkbenchIngredients
         public WorkbenchIngredientsMod(ModContentPack content) : base(content)
         {
             Settings = GetSettings<WorkbenchIngredientsSettings>();
-            new Harmony("archdukejim.workbenchingredients").PatchAll();
+
+            // Mod ctors run after every mod's assemblies are loaded, so soft-dependency types (Common
+            // Sense) already exist here if the player has them active. Our About.xml loadAfter them, so
+            // their Harmony patches are in place before we wrap Common Sense's opportunistic product-haul.
+            var harmony = new Harmony("archdukejim.workbenchingredients");
+            harmony.PatchAll();
+            CommonSenseCompat.Apply(harmony);
         }
 
         public override string SettingsCategory() => "WI.SettingsCategory".Translate();
