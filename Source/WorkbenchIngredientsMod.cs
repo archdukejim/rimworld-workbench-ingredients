@@ -4,23 +4,23 @@ using HarmonyLib;
 using UnityEngine;
 using Verse;
 
-namespace BenchIngredientSources
+namespace WorkbenchIngredients
 {
     /// <summary>
     /// Mod entry point. Constructed once when mods load; applies the Harmony patches and owns the
     /// global settings (the default fallback radius that new benches inherit).
     /// </summary>
-    public class BenchIngredientSourcesMod : Mod
+    public class WorkbenchIngredientsMod : Mod
     {
-        public static BenchIngredientSourcesSettings Settings { get; private set; }
+        public static WorkbenchIngredientsSettings Settings { get; private set; }
 
-        public BenchIngredientSourcesMod(ModContentPack content) : base(content)
+        public WorkbenchIngredientsMod(ModContentPack content) : base(content)
         {
-            Settings = GetSettings<BenchIngredientSourcesSettings>();
-            new Harmony("archdukejim.benchingredientsources").PatchAll();
+            Settings = GetSettings<WorkbenchIngredientsSettings>();
+            new Harmony("archdukejim.workbenchingredients").PatchAll();
         }
 
-        public override string SettingsCategory() => "BIS.SettingsCategory".Translate();
+        public override string SettingsCategory() => "WI.SettingsCategory".Translate();
 
         public override void DoSettingsWindowContents(Rect inRect) => Settings.DoWindowContents(inRect);
     }
@@ -29,7 +29,7 @@ namespace BenchIngredientSources
     /// Global mod settings. Only holds the default fallback radius used to pre-fill a brand-new bench's
     /// per-bench fallback slider. Stored in the mod config file, never in a save.
     /// </summary>
-    public class BenchIngredientSourcesSettings : ModSettings
+    public class WorkbenchIngredientsSettings : ModSettings
     {
         /// <summary>Default per-bench fallback radius, used when a bench has no source selected and has
         /// not been given its own radius yet. Matches the vanilla bill default of 999 = effectively map-wide.</summary>
@@ -44,9 +44,9 @@ namespace BenchIngredientSources
         {
             var list = new Listing_Standard();
             list.Begin(inRect);
-            list.Label("BIS.DefaultRadius".Translate(defaultRadius.ToString("F0")));
+            list.Label("WI.DefaultRadius".Translate(defaultRadius.ToString("F0")));
             list.Gap(2f);
-            list.Label("BIS.DefaultRadius.Desc".Translate(), -1f, null);
+            list.Label("WI.DefaultRadius.Desc".Translate(), -1f, null);
             defaultRadius = Mathf.Round(list.Slider(defaultRadius, Constants.MinRadius, Constants.MaxRadius));
             list.End();
         }
@@ -68,9 +68,9 @@ namespace BenchIngredientSources
     /// with work tables is spawned — so the comp instance is created for every work table on load.
     /// </summary>
     [StaticConstructorOnStartup]
-    public static class BenchCompInjector
+    public static class WorkbenchCompInjector
     {
-        static BenchCompInjector()
+        static WorkbenchCompInjector()
         {
             int added = 0;
             foreach (ThingDef def in DefDatabase<ThingDef>.AllDefsListForReading)
@@ -79,14 +79,14 @@ namespace BenchIngredientSources
                 if (!typeof(RimWorld.Building_WorkTable).IsAssignableFrom(def.thingClass)) continue;
 
                 if (def.comps == null) def.comps = new List<CompProperties>();
-                if (def.comps.Any(c => c is CompProperties_BenchIngredientSources)) continue; // already added by XML
+                if (def.comps.Any(c => c is CompProperties_WorkbenchIngredients)) continue; // already added by XML
 
-                def.comps.Add(new CompProperties_BenchIngredientSources());
+                def.comps.Add(new CompProperties_WorkbenchIngredients());
                 added++;
             }
 
             if (added > 0)
-                Log.Message($"[BenchIngredientSources] Added ingredient-source comp to {added} work-table " +
+                Log.Message($"[WorkbenchIngredients] Added ingredient-source comp to {added} work-table " +
                             "subclass def(s) not covered by the XML patch.");
         }
     }

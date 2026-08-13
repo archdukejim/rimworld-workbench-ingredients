@@ -2,13 +2,13 @@
 <Patch>
 
   <!--
-    Adds CompProperties_BenchIngredientSources to every work-table ThingDef so each bench can store
+    Adds CompProperties_WorkbenchIngredients to every work-table ThingDef so each bench can store
     its own ingredient-source selection.
 
     XPath can only match on the literal <thingClass> string, so this matches ThingDefs whose thingClass
     is Building_WorkTable (with or without the RimWorld. namespace prefix, since core defs write it
     unqualified). Modded benches that use a *subclass* of Building_WorkTable have a different thingClass
-    string and are NOT caught here — those are handled at runtime by BenchCompInjector (a
+    string and are NOT caught here — those are handled at runtime by WorkbenchCompInjector (a
     [StaticConstructorOnStartup] net that walks every ThingDef and adds the comp to any Building_WorkTable
     subclass the XML missed, de-duplicating against whatever this patch already added).
 
@@ -35,7 +35,7 @@
   <Operation Class="PatchOperationAdd">
     <xpath>Defs/ThingDef[thingClass="Building_WorkTable" or thingClass="RimWorld.Building_WorkTable"]/comps</xpath>
     <value>
-      <li Class="BenchIngredientSources.CompProperties_BenchIngredientSources" />
+      <li Class="WorkbenchIngredients.CompProperties_WorkbenchIngredients" />
     </value>
   </Operation>
 

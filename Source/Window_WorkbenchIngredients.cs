@@ -4,19 +4,19 @@ using RimWorld;
 using UnityEngine;
 using Verse;
 
-namespace BenchIngredientSources
+namespace WorkbenchIngredients
 {
     /// <summary>
     /// Per-bench configuration window. Shows a scrollable checklist of the map's stockpile zones, storage
     /// buildings and storage groups (each a selectable source), plus the fallback default-radius slider used
     /// when nothing is selected. Edits write straight back to the bench's comp.
     /// </summary>
-    public class Window_BenchIngredientSources : Window
+    public class Window_WorkbenchIngredients : Window
     {
-        private readonly CompBenchIngredientSources comp;
+        private readonly CompWorkbenchIngredients comp;
         private Vector2 scrollPos;
 
-        public Window_BenchIngredientSources(CompBenchIngredientSources comp)
+        public Window_WorkbenchIngredients(CompWorkbenchIngredients comp)
         {
             this.comp = comp;
             doCloseX = true;
@@ -35,18 +35,18 @@ namespace BenchIngredientSources
             // Title.
             Text.Font = GameFont.Medium;
             var titleRect = new Rect(0f, 0f, inRect.width, 34f);
-            Widgets.Label(titleRect, "BIS.WindowTitle".Translate(comp.parent.LabelCap));
+            Widgets.Label(titleRect, "WI.WindowTitle".Translate(comp.parent.LabelCap));
             Text.Font = GameFont.Small;
 
             // Status line: which mode this bench is in right now.
             var statusRect = new Rect(0f, 36f, inRect.width, 40f);
             Widgets.Label(statusRect, comp.HasAnySource
-                ? "BIS.StatusSourced".Translate()
-                : "BIS.StatusRadius".Translate());
+                ? "WI.StatusSourced".Translate()
+                : "WI.StatusRadius".Translate());
 
             // "Clear selection" convenience button, top-right.
             var clearRect = new Rect(inRect.width - 130f, 4f, 130f, 26f);
-            if (comp.HasAnySource && Widgets.ButtonText(clearRect, "BIS.ClearSelection".Translate()))
+            if (comp.HasAnySource && Widgets.ButtonText(clearRect, "WI.ClearSelection".Translate()))
             {
                 comp.sourceZones.Clear();
                 comp.sourceBuildings.Clear();
@@ -77,9 +77,9 @@ namespace BenchIngredientSources
             var list = new Listing_Standard();
             list.Begin(viewRect);
 
-            DrawZoneSection(list, "BIS.SectionZones".Translate(), zones);
-            DrawBuildingSection(list, "BIS.SectionBuildings".Translate(), buildings);
-            DrawGroupSection(list, "BIS.SectionGroups".Translate(), groups);
+            DrawZoneSection(list, "WI.SectionZones".Translate(), zones);
+            DrawBuildingSection(list, "WI.SectionBuildings".Translate(), buildings);
+            DrawGroupSection(list, "WI.SectionGroups".Translate(), groups);
 
             list.End();
             Widgets.EndScrollView();
@@ -89,7 +89,7 @@ namespace BenchIngredientSources
             var bl = new Listing_Standard();
             bl.Begin(bottom);
             GUI.color = comp.HasAnySource ? new Color(1f, 1f, 1f, 0.5f) : Color.white; // dim when unused
-            bl.Label("BIS.FallbackRadius".Translate(comp.FallbackRadius.ToString("F0")));
+            bl.Label("WI.FallbackRadius".Translate(comp.FallbackRadius.ToString("F0")));
             comp.FallbackRadius = Mathf.Round(bl.Slider(comp.FallbackRadius, Constants.MinRadius, Constants.MaxRadius));
             GUI.color = Color.white;
             bl.End();
@@ -98,7 +98,7 @@ namespace BenchIngredientSources
         private void DrawZoneSection(Listing_Standard list, string header, List<Zone_Stockpile> zones)
         {
             SectionHeader(list, header);
-            if (zones.Count == 0) { list.Label("BIS.None".Translate()); return; }
+            if (zones.Count == 0) { list.Label("WI.None".Translate()); return; }
             foreach (Zone_Stockpile z in zones)
             {
                 bool sel = comp.sourceZones.Contains(z);
@@ -111,7 +111,7 @@ namespace BenchIngredientSources
         private void DrawBuildingSection(Listing_Standard list, string header, List<Building_Storage> buildings)
         {
             SectionHeader(list, header);
-            if (buildings.Count == 0) { list.Label("BIS.None".Translate()); return; }
+            if (buildings.Count == 0) { list.Label("WI.None".Translate()); return; }
             foreach (Building_Storage b in buildings)
             {
                 bool sel = comp.sourceBuildings.Contains(b);
@@ -124,7 +124,7 @@ namespace BenchIngredientSources
         private void DrawGroupSection(Listing_Standard list, string header, List<StorageGroup> groups)
         {
             SectionHeader(list, header);
-            if (groups.Count == 0) { list.Label("BIS.None".Translate()); return; }
+            if (groups.Count == 0) { list.Label("WI.None".Translate()); return; }
             foreach (StorageGroup g in groups)
             {
                 bool sel = comp.sourceGroups.Contains(g);

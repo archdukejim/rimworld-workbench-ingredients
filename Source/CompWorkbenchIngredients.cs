@@ -2,15 +2,15 @@ using System.Collections.Generic;
 using RimWorld;
 using Verse;
 
-namespace BenchIngredientSources
+namespace WorkbenchIngredients
 {
     /// <summary>Comp properties. Carries no config of its own — every selection lives on the comp instance,
-    /// per work table. Added to work-table defs by the Patches XML (and BenchCompInjector for subclasses).</summary>
-    public class CompProperties_BenchIngredientSources : CompProperties
+    /// per work table. Added to work-table defs by the Patches XML (and WorkbenchCompInjector for subclasses).</summary>
+    public class CompProperties_WorkbenchIngredients : CompProperties
     {
-        public CompProperties_BenchIngredientSources()
+        public CompProperties_WorkbenchIngredients()
         {
-            compClass = typeof(CompBenchIngredientSources);
+            compClass = typeof(CompWorkbenchIngredients);
         }
     }
 
@@ -19,7 +19,7 @@ namespace BenchIngredientSources
     /// number of stockpile zones, storage buildings and storage groups) plus a fallback search radius
     /// used only when nothing is selected. Persisted in the save via <see cref="PostExposeData"/>.
     /// </summary>
-    public class CompBenchIngredientSources : ThingComp
+    public class CompWorkbenchIngredients : ThingComp
     {
         // The three kinds of selectable source. All are ILoadReferenceable (Zone / Thing / StorageGroup),
         // so they scribe as references and resolve back to the live objects on load.
@@ -36,7 +36,7 @@ namespace BenchIngredientSources
             get
             {
                 if (fallbackRadius < 0f)
-                    fallbackRadius = BenchIngredientSourcesMod.Settings.defaultRadius;
+                    fallbackRadius = WorkbenchIngredientsMod.Settings.defaultRadius;
                 return fallbackRadius;
             }
             set => fallbackRadius = value;

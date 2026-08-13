@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+
+  <!-- Mod settings -->
+  <WI.SettingsCategory>Workbench Ingredients</WI.SettingsCategory>
+  <WI.DefaultRadius>Default fallback search radius: {0}</WI.DefaultRadius>
+  <WI.DefaultRadius.Desc>Radius a new work table uses when it has no ingredient source selected. Pre-fills each bench's own fallback slider; changing it here does not alter benches already configured.</WI.DefaultRadius.Desc>
+
+  <!-- ITab button -->
+  <WI.Button>Ingredient sources</WI.Button>
+
+  <!-- Sources window -->
+  <WI.WindowTitle>Ingredient sources — {0}</WI.WindowTitle>
+  <WI.StatusSourced>Sources selected: this bench pulls ingredients from the checked locations, map-wide. Each bill's own search radius is ignored.</WI.StatusSourced>
+  <WI.StatusRadius>No source selected: this bench uses the fallback radius below for every bill, overriding each bill's own search radius.</WI.StatusRadius>
+  <WI.SectionZones>Stockpile zones</WI.SectionZones>
+  <WI.SectionBuildings>Storage buildings</WI.SectionBuildings>
+  <WI.SectionGroups>Storage groups</WI.SectionGroups>
+  <WI.None>(none on this map)</WI.None>
+  <WI.ClearSelection>Clear selection</WI.ClearSelection>
+  <WI.FallbackRadius>Fallback search radius (used when nothing is selected): {0}</WI.FallbackRadius>
+
+</LanguageData>

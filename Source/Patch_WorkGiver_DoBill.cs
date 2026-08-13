@@ -6,7 +6,7 @@ using RimWorld;
 using Verse;
 using Verse.AI;
 
-namespace BenchIngredientSources
+namespace WorkbenchIngredients
 {
     /// <summary>
     /// The heart of the mod. Redirects a bill's ingredient search based on the bench's comp:
@@ -45,7 +45,7 @@ namespace BenchIngredientSources
             // Resolve by name; tolerate the version-specific parameter list.
             MethodInfo m = AccessTools.Method(typeof(WorkGiver_DoBill), "TryFindBestBillIngredients");
             if (m == null)
-                Log.Error("[BenchIngredientSources] Could not find WorkGiver_DoBill.TryFindBestBillIngredients " +
+                Log.Error("[WorkbenchIngredients] Could not find WorkGiver_DoBill.TryFindBestBillIngredients " +
                           "to patch — the mod's core feature will not work. Please report your RimWorld version.");
             return m;
         }
@@ -57,7 +57,7 @@ namespace BenchIngredientSources
         {
             __state = NoOverride;
 
-            CompBenchIngredientSources comp = (billGiver as ThingWithComps)?.GetComp<CompBenchIngredientSources>();
+            CompWorkbenchIngredients comp = (billGiver as ThingWithComps)?.GetComp<CompWorkbenchIngredients>();
             if (comp == null) return true; // not one of our benches -> vanilla, untouched
 
             if (comp.HasAnySource)
@@ -75,7 +75,7 @@ namespace BenchIngredientSources
                 if (!degradeWarned)
                 {
                     degradeWarned = true;
-                    Log.Warning("[BenchIngredientSources] Ingredient set-matcher unavailable; benches with " +
+                    Log.Warning("[WorkbenchIngredients] Ingredient set-matcher unavailable; benches with " +
                                 "selected sources fall back to a map-wide radius search this session.");
                 }
                 __state = bill.ingredientSearchRadius;
@@ -103,7 +103,7 @@ namespace BenchIngredientSources
         /// forbidden), then let the vanilla matcher choose the actual combination into <paramref name="chosen"/>.
         /// </summary>
         static bool TryFindFromSources(Bill bill, Pawn pawn, Thing billGiver, List<ThingCount> chosen,
-                                       List<IngredientCount> missingIngredients, CompBenchIngredientSources comp)
+                                       List<IngredientCount> missingIngredients, CompWorkbenchIngredients comp)
         {
             chosen.Clear();
             candidates.Clear();
@@ -174,7 +174,7 @@ namespace BenchIngredientSources
             dispatcher = AccessTools.Method(typeof(WorkGiver_DoBill), "TryFindBestBillIngredientsInSet");
             if (dispatcher == null)
             {
-                Log.Warning("[BenchIngredientSources] Could not resolve " +
+                Log.Warning("[WorkbenchIngredients] Could not resolve " +
                             "WorkGiver_DoBill.TryFindBestBillIngredientsInSet. Selected-source benches will " +
                             "degrade to a map-wide radius search. Please report your RimWorld version so the " +
                             "method name can be updated.");
@@ -187,7 +187,7 @@ namespace BenchIngredientSources
             {
                 if (!CanBind(p.ParameterType))
                 {
-                    Log.Warning("[BenchIngredientSources] TryFindBestBillIngredientsInSet has an unexpected " +
+                    Log.Warning("[WorkbenchIngredients] TryFindBestBillIngredientsInSet has an unexpected " +
                                 $"parameter '{p.Name}' of type {p.ParameterType}. Falling back to a map-wide " +
                                 "radius search for selected-source benches.");
                     dispatcher = null;
@@ -238,7 +238,7 @@ namespace BenchIngredientSources
                 if (!loggedRuntimeFail)
                 {
                     loggedRuntimeFail = true;
-                    Log.Error("[BenchIngredientSources] Invoking TryFindBestBillIngredientsInSet threw; " +
+                    Log.Error("[WorkbenchIngredients] Invoking TryFindBestBillIngredientsInSet threw; " +
                               "selected-source benches will report no ingredients. " + e);
                 }
                 return false;

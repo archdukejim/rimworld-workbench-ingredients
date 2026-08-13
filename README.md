@@ -1,8 +1,6 @@
 # Workbench Ingredients
 
-A RimWorld 1.5/1.6 mod that moves crafting ingredient-sourcing from **per-bill** to **per-workbench**.
-
-> Packaged in-game as **Bench Ingredient Sources** (`packageId: archdukejim.BenchIngredientSources`).
+A RimWorld 1.5/1.6 mod that moves crafting ingredient-sourcing from **per-bill** to **per-workbench**. (packageId `archdukejim.WorkbenchIngredients`)
 
 Each work table gets an **Ingredient sources** button in its Bills tab. Open it and check any combination of:
 
@@ -20,23 +18,23 @@ Only *where* ingredients are searched changes. The ingredient filter, required c
 
 | Piece | File |
 |---|---|
-| Comp added to every work table (stores the per-bench selection + fallback radius) | `Source/CompBenchIngredientSources.cs` |
-| XML that attaches the comp to `Building_WorkTable` defs | `Patches/AddBenchIngredientSourcesComp.xml` |
-| Runtime net that also attaches it to `Building_WorkTable` *subclasses* | `BenchCompInjector` in `Source/BenchIngredientSourcesMod.cs` |
+| Comp added to every work table (stores the per-bench selection + fallback radius) | `Source/CompWorkbenchIngredients.cs` |
+| XML that attaches the comp to `Building_WorkTable` defs | `Patches/AddWorkbenchIngredientsComp.xml` |
+| Runtime net that also attaches it to `Building_WorkTable` *subclasses* | `WorkbenchCompInjector` in `Source/WorkbenchIngredientsMod.cs` |
 | Ingredient-search override (both selected-sources and fallback-radius paths) | `Source/Patch_WorkGiver_DoBill.cs` |
 | "Ingredient sources" tab button | `Source/Patch_ITab_Bills.cs` |
-| Sources window (checklist + fallback slider) | `Source/Window_BenchIngredientSources.cs` |
-| Global default-radius setting | `BenchIngredientSourcesSettings` in `Source/BenchIngredientSourcesMod.cs` |
+| Sources window (checklist + fallback slider) | `Source/Window_WorkbenchIngredients.cs` |
+| Global default-radius setting | `WorkbenchIngredientsSettings` in `Source/WorkbenchIngredientsMod.cs` |
 
 The override patches the private `WorkGiver_DoBill.TryFindBestBillIngredients` and, for selected sources, calls the private set-matcher `WorkGiver_DoBill.TryFindBestBillIngredientsInSet` by reflection (resolved by name, arguments bound by type) so it degrades gracefully if a future version renames it. Both signatures were verified against 1.6 `Assembly-CSharp.dll`.
 
 ## Building
 
 ```bash
-dotnet build Source/BenchIngredientSources.csproj -c Release
+dotnet build Source/WorkbenchIngredients.csproj -c Release
 ```
 
-Output goes to `Assemblies/BenchIngredientSources.dll`. Adjust `RimWorldPath` / the Harmony `HintPath` in the `.csproj` if your install differs.
+Output goes to `Assemblies/WorkbenchIngredients.dll`. Adjust `RimWorldPath` / the Harmony `HintPath` in the `.csproj` if your install differs.
 
 ## Keep it loaded
 

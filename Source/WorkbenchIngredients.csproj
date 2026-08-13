@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
-    <RootNamespace>BenchIngredientSources</RootNamespace>
-    <AssemblyName>BenchIngredientSources</AssemblyName>
+    <RootNamespace>WorkbenchIngredients</RootNamespace>
+    <AssemblyName>WorkbenchIngredients</AssemblyName>
     <!-- Root-level Assemblies\ loads for every listed game version (1.5 and 1.6 share the API we use). -->
     <OutputPath>..\Assemblies\</OutputPath>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>

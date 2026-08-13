@@ -4,7 +4,7 @@ using RimWorld;
 using UnityEngine;
 using Verse;
 
-namespace BenchIngredientSources
+namespace WorkbenchIngredients
 {
     /// <summary>
     /// Adds an "Ingredient sources" button to the header row of the Bills tab. Clicking it opens the
@@ -25,7 +25,7 @@ namespace BenchIngredientSources
         static void Postfix(ITab __instance)
         {
             // The selected building is the bench. Only draw for work tables that carry our comp.
-            var comp = (Find.Selector.SingleSelectedThing as ThingWithComps)?.GetComp<CompBenchIngredientSources>();
+            var comp = (Find.Selector.SingleSelectedThing as ThingWithComps)?.GetComp<CompWorkbenchIngredients>();
             if (comp == null) return;
 
             Vector2 winSize = TabSize(__instance);
@@ -42,8 +42,8 @@ namespace BenchIngredientSources
             if (rect.xMax > winSize.x - 70f)
                 return;
 
-            if (Widgets.ButtonText(rect, "BIS.Button".Translate()))
-                Find.WindowStack.Add(new Window_BenchIngredientSources(comp));
+            if (Widgets.ButtonText(rect, "WI.Button".Translate()))
+                Find.WindowStack.Add(new Window_WorkbenchIngredients(comp));
         }
 
         static Vector2 TabSize(ITab instance)
