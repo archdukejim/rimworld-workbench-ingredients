@@ -7,10 +7,21 @@
   <WI.DefaultRadius.Desc>Radius a new work table uses when it has no ingredient source selected. Pre-fills each bench's own fallback slider; changing it here does not alter benches already configured.</WI.DefaultRadius.Desc>
 
   <!-- ITab button -->
-  <WI.Button>Ingredient sources</WI.Button>
+  <WI.Button>Sources / output</WI.Button>
 
-  <!-- Sources window -->
-  <WI.WindowTitle>Ingredient sources — {0}</WI.WindowTitle>
+  <!-- Per-bench window -->
+  <WI.WindowTitle>Workbench I/O — {0}</WI.WindowTitle>
+
+  <!-- Output section -->
+  <WI.OutputHeader>Output</WI.OutputHeader>
+  <WI.OutputMode.Vanilla>Vanilla — each bill keeps its own store setting</WI.OutputMode.Vanilla>
+  <WI.OutputMode.Vanilla.Desc>Finished products are stored using each bill's own setting (drop on floor / take to best stockpile / take to a specific stockpile). Default.</WI.OutputMode.Vanilla.Desc>
+  <WI.OutputMode.Local>Drop at bench — crafter never hauls</WI.OutputMode.Local>
+  <WI.OutputMode.Local.Desc>When a bill completes, the crafter drops the product at the bench and immediately goes back to work; a hauler moves it to storage later. Overrides every bill's store setting at this bench.</WI.OutputMode.Local.Desc>
+  <WI.OutputComingSoon>More modes planned: Primary/Secondary (e.g. medkits → hospital, overflow to bulk) and Even distribution (top up all eligible stockpiles).</WI.OutputComingSoon>
+
+  <!-- Ingredient sources section -->
+  <WI.SourcesHeader>Ingredient sources</WI.SourcesHeader>
   <WI.StatusSourced>Sources selected: this bench pulls ingredients from the checked locations, map-wide. Each bill's own search radius is ignored.</WI.StatusSourced>
   <WI.StatusRadius>No source selected: this bench uses the fallback radius below for every bill, overriding each bill's own search radius.</WI.StatusRadius>
   <WI.SectionZones>Stockpile zones</WI.SectionZones>

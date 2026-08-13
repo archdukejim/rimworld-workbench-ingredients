@@ -32,26 +32,55 @@ namespace WorkbenchIngredients
             Map map = comp?.parent?.Map;
             if (map == null) { Close(); return; }
 
+            float y = 0f;
+
             // Title.
             Text.Font = GameFont.Medium;
-            var titleRect = new Rect(0f, 0f, inRect.width, 34f);
-            Widgets.Label(titleRect, "WI.WindowTitle".Translate(comp.parent.LabelCap));
+            Widgets.Label(new Rect(0f, y, inRect.width, 34f), "WI.WindowTitle".Translate(comp.parent.LabelCap));
             Text.Font = GameFont.Small;
+            y += 42f;
 
-            // Status line: which mode this bench is in right now.
-            var statusRect = new Rect(0f, 36f, inRect.width, 40f);
-            Widgets.Label(statusRect, comp.HasAnySource
-                ? "WI.StatusSourced".Translate()
-                : "WI.StatusRadius".Translate());
+            // ===== OUTPUT: where finished products go, per bench (overrides each bill's store setting). =====
+            DimHeader(new Rect(0f, y, inRect.width, 22f), "WI.OutputHeader".Translate());
+            y += 24f;
+            Widgets.DrawLineHorizontal(0f, y, inRect.width);
+            y += 6f;
 
-            // "Clear selection" convenience button, top-right.
-            var clearRect = new Rect(inRect.width - 130f, 4f, 130f, 26f);
-            if (comp.HasAnySource && Widgets.ButtonText(clearRect, "WI.ClearSelection".Translate()))
+            var rVanilla = new Rect(0f, y, inRect.width, 24f);
+            if (Widgets.RadioButtonLabeled(rVanilla, "WI.OutputMode.Vanilla".Translate(),
+                    comp.outputMode == WorkbenchOutputMode.Vanilla))
+                comp.outputMode = WorkbenchOutputMode.Vanilla;
+            TooltipHandler.TipRegion(rVanilla, "WI.OutputMode.Vanilla.Desc".Translate());
+            y += 26f;
+
+            var rLocal = new Rect(0f, y, inRect.width, 24f);
+            if (Widgets.RadioButtonLabeled(rLocal, "WI.OutputMode.Local".Translate(),
+                    comp.outputMode == WorkbenchOutputMode.Local))
+                comp.outputMode = WorkbenchOutputMode.Local;
+            TooltipHandler.TipRegion(rLocal, "WI.OutputMode.Local.Desc".Translate());
+            y += 28f;
+
+            GUI.color = new Color(1f, 1f, 1f, 0.5f);
+            Widgets.Label(new Rect(0f, y, inRect.width, 34f), "WI.OutputComingSoon".Translate());
+            GUI.color = Color.white;
+            y += 40f;
+
+            // ===== INGREDIENT SOURCES: where ingredients come from, per bench. =====
+            DimHeader(new Rect(0f, y, inRect.width - 140f, 22f), "WI.SourcesHeader".Translate());
+            if (comp.HasAnySource &&
+                Widgets.ButtonText(new Rect(inRect.width - 130f, y - 2f, 130f, 24f), "WI.ClearSelection".Translate()))
             {
                 comp.sourceZones.Clear();
                 comp.sourceBuildings.Clear();
                 comp.sourceGroups.Clear();
             }
+            y += 24f;
+            Widgets.DrawLineHorizontal(0f, y, inRect.width);
+            y += 6f;
+
+            Widgets.Label(new Rect(0f, y, inRect.width, 40f),
+                comp.HasAnySource ? "WI.StatusSourced".Translate() : "WI.StatusRadius".Translate());
+            y += 44f;
 
             // Gather the three source kinds from the map.
             List<Zone_Stockpile> zones = map.zoneManager.AllZones.OfType<Zone_Stockpile>()
@@ -62,10 +91,9 @@ namespace WorkbenchIngredients
                 ? map.storageGroups.StorageGroupsForReading.OrderBy(g => g.GroupingLabel).ToList()
                 : new List<StorageGroup>();
 
-            // Layout: scroll list in the middle, fallback-radius slider pinned to the bottom.
+            // Scroll list of sources, fallback-radius slider pinned to the bottom.
             const float bottomH = 74f;
-            float top = 80f;
-            var outRect = new Rect(0f, top, inRect.width, inRect.height - top - bottomH - 8f);
+            var outRect = new Rect(0f, y, inRect.width, inRect.height - y - bottomH - 8f);
 
             const float rowH = 26f;
             const float headerH = 30f;
@@ -93,6 +121,17 @@ namespace WorkbenchIngredients
             comp.FallbackRadius = Mathf.Round(bl.Slider(comp.FallbackRadius, Constants.MinRadius, Constants.MaxRadius));
             GUI.color = Color.white;
             bl.End();
+        }
+
+        /// <summary>A dim, bottom-aligned section header.</summary>
+        private static void DimHeader(Rect rect, string label)
+        {
+            Color prev = GUI.color;
+            GUI.color = new Color(0.85f, 0.85f, 0.85f);
+            Text.Anchor = TextAnchor.LowerLeft;
+            Widgets.Label(rect, label);
+            Text.Anchor = TextAnchor.UpperLeft;
+            GUI.color = prev;
         }
 
         private void DrawZoneSection(Listing_Standard list, string header, List<Zone_Stockpile> zones)

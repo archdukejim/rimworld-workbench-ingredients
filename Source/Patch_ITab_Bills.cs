@@ -7,8 +7,8 @@ using Verse;
 namespace WorkbenchIngredients
 {
     /// <summary>
-    /// Adds an "Ingredient sources" button to the header row of the Bills tab. Clicking it opens the
-    /// per-bench configuration window for the currently selected work table.
+    /// Adds a "Sources / output" button to the header row of the Bills tab. Clicking it opens the
+    /// per-bench configuration window (ingredient sources + product output) for the selected work table.
     ///
     /// PATCH TARGET (NEEDS-VERIFICATION): protected override void RimWorld.ITab_Bills.FillTab().
     /// FillTab draws in a GUI group whose origin is the tab's top-left, so a postfix draws in the same

@@ -8,7 +8,7 @@
     <li>1.6</li>
   </supportedVersions>
 
-  <!-- Harmony is a hard dependency: the ingredient-search override and the ITab button are Harmony patches. -->
+  <!-- Harmony is a hard dependency: the ingredient-search / store-mode overrides and the ITab button are Harmony patches. -->
   <modDependencies>
     <li>
       <packageId>brrainz.harmony</packageId>
@@ -22,13 +22,13 @@
     <li>brrainz.harmony</li>
   </loadAfter>
 
-  <description>Configure where each work table pulls its crafting ingredients from — once, for the whole bench — instead of per bill.
+  <description>Configure crafting ingredient sources AND product output per work table — once, for the whole bench — instead of per bill.
 
-Every work table gets an "Ingredient sources" button in its Bills tab. Open it and check any combination of stockpile zones, storage buildings (shelves/racks) and storage groups. The bench then draws ingredients from all of those sources combined, map-wide, and ignores each bill's own ingredient search radius.
+Every work table gets a "Sources / output" button in its Bills tab, opening one per-bench window with two sections.
 
-If you leave every source unchecked, the bench instead uses a single per-bench fallback search radius (pre-filled from a global default in the mod settings), applied to every bill at that bench.
+INGREDIENT SOURCES: check any combination of stockpile zones, storage buildings (shelves/racks) and storage groups. The bench then draws ingredients from all of those sources combined, map-wide, and ignores each bill's own ingredient search radius. If you leave every source unchecked, the bench instead uses a single per-bench fallback search radius (pre-filled from a global default in the mod settings), applied to every bill at that bench. Only WHERE ingredients are searched changes — the ingredient filter, required amounts, allow-mixing rules, reachability and forbidden checks are all vanilla; this mod reuses the game's own ingredient matcher and only swaps the candidate set it searches.
 
-Only WHERE ingredients are searched changes. The ingredient filter, required amounts, allow-mixing rules, reachability and forbidden checks are all vanilla — this mod reuses the game's own ingredient matcher and only swaps the candidate set it searches.
+OUTPUT: choose "Drop at bench" so crafters drop finished products in place and get straight back to work — a hauler takes them to storage later, instead of the crafter carrying every product to a stockpile. This overrides each bill's store setting at that bench. (Default leaves each bill's store setting alone.)
 
 IMPORTANT — keep this mod loaded while a save uses it. It attaches a small component to every work table def to store each bench's source selection. Removing the mod is safe (work tables simply lose their stored selection and revert to vanilla per-bill radius), but you will get one-time "could not load" warnings and every bench's configuration is discarded. Keep it enabled to preserve your per-bench setups.
 
