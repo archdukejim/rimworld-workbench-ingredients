@@ -1,6 +1,8 @@
-# Bench Ingredient Sources
+# Workbench Ingredients
 
 A RimWorld 1.5/1.6 mod that moves crafting ingredient-sourcing from **per-bill** to **per-workbench**.
+
+> Packaged in-game as **Bench Ingredient Sources** (`packageId: archdukejim.BenchIngredientSources`).
 
 Each work table gets an **Ingredient sources** button in its Bills tab. Open it and check any combination of:
 
