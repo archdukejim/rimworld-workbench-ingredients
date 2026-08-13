@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Patch>
+
+  <!--
+    Adds CompProperties_BenchIngredientSources to every work-table ThingDef so each bench can store
+    its own ingredient-source selection.
+
+    XPath can only match on the literal <thingClass> string, so this matches ThingDefs whose thingClass
+    is Building_WorkTable (with or without the RimWorld. namespace prefix, since core defs write it
+    unqualified). Modded benches that use a *subclass* of Building_WorkTable have a different thingClass
+    string and are NOT caught here — those are handled at runtime by BenchCompInjector (a
+    [StaticConstructorOnStartup] net that walks every ThingDef and adds the comp to any Building_WorkTable
+    subclass the XML missed, de-duplicating against whatever this patch already added).
+
+    Step 1 handles work-table defs that have no <comps> list yet (e.g. the Crafting spot / Butcher spot):
+    the PatchOperationConditional only enters its <match> when at least one such def exists, so it never
+    logs a "no match" error when every work table already has comps.
+
+    Step 2 appends our comp to the <comps> list of every matching work table. By the time it runs, step 1
+    has guaranteed the list exists.
+  -->
+
+  <!-- Step 1: give a <comps> list to matching work tables that lack one. -->
+  <Operation Class="PatchOperationConditional">
+    <xpath>Defs/ThingDef[(thingClass="Building_WorkTable" or thingClass="RimWorld.Building_WorkTable") and not(comps)]</xpath>
+    <match Class="PatchOperationAdd">
+      <xpath>Defs/ThingDef[(thingClass="Building_WorkTable" or thingClass="RimWorld.Building_WorkTable") and not(comps)]</xpath>
+      <value>
+        <comps />
+      </value>
+    </match>
+  </Operation>
+
+  <!-- Step 2: add the comp to every matching work table's <comps> list. -->
+  <Operation Class="PatchOperationAdd">
+    <xpath>Defs/ThingDef[thingClass="Building_WorkTable" or thingClass="RimWorld.Building_WorkTable"]/comps</xpath>
+    <value>
+      <li Class="BenchIngredientSources.CompProperties_BenchIngredientSources" />
+    </value>
+  </Operation>
+
+</Patch>

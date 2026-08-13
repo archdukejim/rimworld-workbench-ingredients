@@ -1,0 +1,5 @@
+# Build intermediates
+Source/obj/
+Source/bin/
+
+# Keep the shipped assembly (Assemblies/*.dll) tracked.
