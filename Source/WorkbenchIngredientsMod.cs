@@ -37,8 +37,9 @@ namespace WorkbenchIngredients
     /// </summary>
     public class WorkbenchIngredientsSettings : ModSettings
     {
-        /// <summary>Default per-bench fallback radius, used when a bench has no source selected and has
-        /// not been given its own radius yet. Matches the vanilla bill default of 999 = effectively map-wide.</summary>
+        /// <summary>Default per-bench fallback radius, used when a bench has no source selected and has not
+        /// been given its own radius yet. A deliberately conservative default: vanilla bills default to 999
+        /// (effectively map-wide), but 25 keeps a new bench searching locally until the player widens it.</summary>
         public float defaultRadius = 25f;
 
         public override void ExposeData()
