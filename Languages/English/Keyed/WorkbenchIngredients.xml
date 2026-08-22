@@ -28,6 +28,8 @@
   <WI.SectionBuildings>Storage buildings</WI.SectionBuildings>
   <WI.SectionGroups>Storage groups</WI.SectionGroups>
   <WI.None>(none on this map)</WI.None>
+  <WI.NoMatches>(no matches)</WI.NoMatches>
+  <WI.SearchPlaceholder>Search sources…</WI.SearchPlaceholder>
   <WI.ClearSelection>Clear selection</WI.ClearSelection>
   <WI.FallbackRadius>Fallback search radius (used when nothing is selected): {0}</WI.FallbackRadius>
 

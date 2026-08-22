@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
@@ -15,6 +16,7 @@ namespace WorkbenchIngredients
     {
         private readonly CompWorkbenchIngredients comp;
         private Vector2 scrollPos;
+        private string searchFilter = "";
 
         public Window_WorkbenchIngredients(CompWorkbenchIngredients comp)
         {
@@ -82,6 +84,11 @@ namespace WorkbenchIngredients
                 comp.HasAnySource ? "WI.StatusSourced".Translate() : "WI.StatusRadius".Translate());
             y += 44f;
 
+            // Search/filter box — filters the three sections below by label (display only; selection is
+            // stored on the comp, so a checked source filtered out of view stays selected).
+            DrawSearchRow(new Rect(0f, y, inRect.width, 24f));
+            y += 30f;
+
             // Gather the three source kinds from the map.
             List<Zone_Stockpile> zones = map.zoneManager.AllZones.OfType<Zone_Stockpile>()
                 .OrderBy(z => z.label).ToList();
@@ -90,6 +97,14 @@ namespace WorkbenchIngredients
             List<StorageGroup> groups = map.storageGroups?.StorageGroupsForReading != null
                 ? map.storageGroups.StorageGroupsForReading.OrderBy(g => g.GroupingLabel).ToList()
                 : new List<StorageGroup>();
+
+            // Apply the search filter (case-insensitive substring on each source's display label).
+            if (!string.IsNullOrEmpty(searchFilter))
+            {
+                zones = zones.Where(z => Match(z.label)).ToList();
+                buildings = buildings.Where(b => Match(b.LabelCap.ToString())).ToList();
+                groups = groups.Where(g => Match(g.GroupingLabel)).ToList();
+            }
 
             // Scroll list of sources, fallback-radius slider pinned to the bottom.
             const float bottomH = 74f;
@@ -123,6 +138,43 @@ namespace WorkbenchIngredients
             bl.End();
         }
 
+        /// <summary>Draws the search field with a placeholder when empty and a clear button when non-empty.</summary>
+        private void DrawSearchRow(Rect rect)
+        {
+            bool hasText = !string.IsNullOrEmpty(searchFilter);
+            float clearW = hasText ? 26f : 0f;
+            var tfRect = new Rect(rect.x, rect.y, rect.width - clearW - (hasText ? 4f : 0f), rect.height);
+
+            searchFilter = Widgets.TextField(tfRect, searchFilter);
+
+            if (string.IsNullOrEmpty(searchFilter))
+            {
+                // Placeholder hint drawn inside the (empty) field.
+                Color prev = GUI.color;
+                GUI.color = new Color(1f, 1f, 1f, 0.4f);
+                Text.Anchor = TextAnchor.MiddleLeft;
+                Widgets.Label(new Rect(tfRect.x + 6f, tfRect.y, tfRect.width - 6f, tfRect.height),
+                    "WI.SearchPlaceholder".Translate());
+                Text.Anchor = TextAnchor.UpperLeft;
+                GUI.color = prev;
+            }
+
+            if (hasText && Widgets.ButtonText(new Rect(rect.xMax - clearW, rect.y, clearW, rect.height), "×"))
+            {
+                searchFilter = "";
+                GUI.FocusControl(null); // drop focus so the cleared field doesn't keep the caret
+            }
+        }
+
+        /// <summary>Case-insensitive substring test against the active search filter (true when no filter).</summary>
+        private bool Match(string label) =>
+            string.IsNullOrEmpty(searchFilter) ||
+            (label != null && label.IndexOf(searchFilter, StringComparison.OrdinalIgnoreCase) >= 0);
+
+        /// <summary>Empty-section text: "(no matches)" while filtering, else "(none on this map)".</summary>
+        private string EmptyLabel() =>
+            (string.IsNullOrEmpty(searchFilter) ? "WI.None" : "WI.NoMatches").Translate();
+
         /// <summary>A dim, bottom-aligned section header.</summary>
         private static void DimHeader(Rect rect, string label)
         {
@@ -137,7 +189,7 @@ namespace WorkbenchIngredients
         private void DrawZoneSection(Listing_Standard list, string header, List<Zone_Stockpile> zones)
         {
             SectionHeader(list, header);
-            if (zones.Count == 0) { list.Label("WI.None".Translate()); return; }
+            if (zones.Count == 0) { list.Label(EmptyLabel()); return; }
             foreach (Zone_Stockpile z in zones)
             {
                 bool sel = comp.sourceZones.Contains(z);
@@ -150,7 +202,7 @@ namespace WorkbenchIngredients
         private void DrawBuildingSection(Listing_Standard list, string header, List<Building_Storage> buildings)
         {
             SectionHeader(list, header);
-            if (buildings.Count == 0) { list.Label("WI.None".Translate()); return; }
+            if (buildings.Count == 0) { list.Label(EmptyLabel()); return; }
             foreach (Building_Storage b in buildings)
             {
                 bool sel = comp.sourceBuildings.Contains(b);
@@ -163,7 +215,7 @@ namespace WorkbenchIngredients
         private void DrawGroupSection(Listing_Standard list, string header, List<StorageGroup> groups)
         {
             SectionHeader(list, header);
-            if (groups.Count == 0) { list.Label("WI.None".Translate()); return; }
+            if (groups.Count == 0) { list.Label(EmptyLabel()); return; }
             foreach (StorageGroup g in groups)
             {
                 bool sel = comp.sourceGroups.Contains(g);
