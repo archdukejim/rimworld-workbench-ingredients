@@ -30,18 +30,36 @@ namespace WorkbenchIngredients
 
             Vector2 winSize = TabSize(__instance);
 
-            const float inset = 10f;       // ITab_Bills contracts its content by ~10px
+            const float inset = 10f;         // ITab_Bills contracts its content by ~10px
             const float addBillWidth = 150f; // vanilla "Add bill" dropdown width
             const float gap = 6f;
-            const float btnWidth = 160f;
+            const float maxBtnWidth = 160f;
+            const float minBtnWidth = 48f;   // below this the header row is too cramped; drop to a 2nd row
             const float btnHeight = 29f;
 
-            var rect = new Rect(inset + addBillWidth + gap, inset, btnWidth, btnHeight);
+            // The header row's free span runs from just right of the Add-bill dropdown to just left of the
+            // copy/paste column vanilla pins to the right edge (CopyPasteUI.CopyPasteColumnWidth wide). Bound
+            // against that real constant instead of a magic number so a wider copy/paste column still clears.
+            float x0 = inset + addBillWidth + gap;
+            float xMax = winSize.x - inset - CopyPasteUI.CopyPasteColumnWidth - gap;
+            float avail = xMax - x0;
 
-            // Don't collide with the copy/paste buttons hugging the right edge.
-            if (rect.xMax > winSize.x - 70f)
-                return;
+            Rect rect;
+            if (avail >= minBtnWidth)
+            {
+                // Fits beside "Add bill": shrink to the gap rather than overflow into the copy/paste buttons.
+                rect = new Rect(x0, inset, Mathf.Min(maxBtnWidth, avail), btnHeight);
+            }
+            else
+            {
+                // Pathological layout (very narrow tab / a wide localised Add-bill label): no room on the
+                // header row. Fall back to a full-width row just below it so the button is never lost —
+                // previously it was simply skipped and the whole feature became unreachable for this bench.
+                rect = new Rect(inset, inset + btnHeight + 4f, winSize.x - 2f * inset, btnHeight);
+            }
 
+            // Tooltip carries the full purpose, so even a shrunk/truncated button stays understandable.
+            TooltipHandler.TipRegion(rect, "WI.Button.Tip".Translate());
             if (Widgets.ButtonText(rect, "WI.Button".Translate()))
                 Find.WindowStack.Add(new Window_WorkbenchIngredients(comp));
         }

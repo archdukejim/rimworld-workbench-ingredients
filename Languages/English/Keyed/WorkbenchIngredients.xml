@@ -8,6 +8,7 @@
 
   <!-- ITab button -->
   <WI.Button>Sources / output</WI.Button>
+  <WI.Button.Tip>Configure this bench's ingredient sources and product output — once, for the whole bench, instead of per bill.</WI.Button.Tip>
 
   <!-- Per-bench window -->
   <WI.WindowTitle>Workbench I/O — {0}</WI.WindowTitle>
